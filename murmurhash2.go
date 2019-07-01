@@ -159,3 +159,224 @@ func MurmurHash64B(key []byte, seed uint64) (hash uint64) {
 	return h
 
 }
+
+func MurmurHash2A(key []byte, seed uint32) (hash uint32) {
+	const m uint32 = 0x5bd1e995
+	const r = 24
+	var l int = len(key)
+
+	var data []byte = key
+	var h uint32 = seed
+
+	var k uint32
+
+	for l >= 4 {
+		k = uint32(data[0]) + uint32(data[1]) << 8 + uint32(data[2]) << 16 + uint32(data[3]) << 24
+
+		k *= m; k ^= k >> r; k *= m; h *= m; h ^= k
+
+		data = data[4:]
+		l -= 4
+	}
+
+	var t uint32 = 0
+
+	switch l {
+	case 3:
+		t ^= uint32(data[2]) << 16
+		fallthrough
+	case 2:
+		t ^= uint32(data[1]) << 8
+		fallthrough
+	case 1:
+		t ^= uint32(data[0])
+	}
+
+	t *= m; t ^= t >> r; t *= m; h *= m; h ^= t
+	l *= int(m); l ^= l >> r; l *= int(m); h *= m; h ^= uint32(l)
+
+	h ^= h >> 13
+	h *= m 
+	h ^= h >> 15
+
+	return h
+}
+
+func MurmurHashNeutral2(key []byte, seed uint32) (hash uint32) {
+	const m uint32 = 0x5bd1e995
+	const r = 24
+	var l int = len(key)
+
+	var data []byte = key
+	var h uint32 = seed ^ uint32(l)
+
+	var k uint32
+
+	for l >= 4 {
+		k = uint32(data[0])
+		k |= uint32(data[1]) << 8
+		k |= uint32(data[2]) << 16
+		k |= uint32(data[3]) << 24
+
+		k *= m 
+		k ^= k >> r
+		k *= m
+
+		h *= m 
+		h ^= k
+
+		data = data[4:]
+		l -= 4
+	}
+
+	switch l {
+	case 3:
+		h ^= uint32(data[2]) << 16
+		fallthrough
+	case 2:
+		h ^= uint32(data[1]) << 8
+		fallthrough
+	case 1:
+		h ^= uint32(data[0])
+		h *= m
+	}
+
+	h ^= h >> 13
+	h *= m
+	h ^= h >> 15
+
+	return h
+}
+
+func MurmurHashAligned2(key []byte, seed uint32) (hash uint32) {
+	const m uint32 = 0x5bd1e995
+	const r = 24
+	var l int = len(key)
+
+	var data []byte = key
+	var h uint32 = seed ^ uint32(l)
+	var align int = int(uint64(data[0])) & 3
+
+	var k uint32
+
+	if align != 0 && l >= 4 {
+		var t,d uint32 = 0,0
+
+		switch align {
+		case 1:
+			t |= uint32(data[2]) << 16
+			fallthrough
+		case 2:
+			t |= uint32(data[1]) << 8
+			fallthrough
+		case 3:
+			t |= uint32(data[0])
+		}
+
+		t <<= (8 * uint32(align))
+
+		data = data[4 - align:]
+		l -= 4 - align
+
+		var sl int = 8 * (4 - align)
+		var sr int = 8 * align
+
+		for l >= 4 {
+			d = uint32(data[0]) + uint32(data[1]) << 8 + 
+				uint32(data[2]) << 16 + uint32(data[3]) << 24
+			t = (t >> uint32(sr)) | (d << uint32(sl))
+
+			k = t
+
+			k *= m; k ^= k >> r; k *= m; h *= m; h ^= k
+
+			t = d
+
+			data = data[4:]
+			l -= 4
+		}
+
+		d = 0
+
+		if l >= align {
+			switch align {
+			case 3:
+				d |= uint32(data[2]) << 16
+				fallthrough
+			case 2:
+				d |= uint32(data[1]) << 8
+				fallthrough
+			case 1:
+				d |= uint32(data[0])
+			}
+
+			k = (t >> uint32(sr)) | (d << uint32(sl))
+			k *= m; k ^= k >> r; k *= m; h *= m; h ^= k
+
+			data = data[align:]
+			l -= align
+
+			switch l {
+			case 3:
+				h ^= uint32(data[2]) << 16
+				fallthrough
+			case 2:
+				h ^= uint32(data[1]) << 8
+				fallthrough
+			case 1:
+				h ^= uint32(data[0])
+				h *= m
+			}
+		} else {
+			switch l {
+			case 3:
+				d |= uint32(data[2]) << 16
+				fallthrough
+			case 2:
+				d |= uint32(data[1]) << 8
+				fallthrough
+			case 1:
+				h |= uint32(data[0])
+				fallthrough
+			case 0:
+				h ^= (t >> uint32(sr)) | (d << uint32(sl))
+				h *= m
+			}
+		}
+
+		h ^= h >> 13
+		h *= m
+		h ^= h >> 15
+
+		return h
+	} else {
+		for l >= 4 {
+			k = uint32(data[0]) + uint32(data[1]) << 8 + 
+				uint32(data[2]) << 16 + uint32(data[3]) << 24
+
+			k *= m; k ^= k >> r; k *= m; h *= m; h ^= k
+
+			data = data[4:]
+			l -= 4
+		}
+
+		switch l {
+		case 3:
+			h ^= uint32(data[2]) << 16
+			fallthrough
+		case 2:
+			h ^= uint32(data[1]) << 8
+			fallthrough
+		case 1:
+			h ^= uint32(data[0])
+			h *= m
+		}
+
+		h ^= h >> 13
+		h *= m
+		h ^= h >> 15
+
+		return h
+	}
+}
+
