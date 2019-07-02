@@ -193,7 +193,8 @@ func MurmurHash2A(key []byte, seed uint32) (hash uint32) {
 	}
 
 	t *= m; t ^= t >> r; t *= m; h *= m; h ^= t
-	l *= int(m); l ^= l >> r; l *= int(m); h *= m; h ^= uint32(l)
+	var ll uint32
+	ll = uint32(l) * m; ll ^= ll >> r; ll *= m; h *= m; h ^= ll
 
 	h ^= h >> 13
 	h *= m 
