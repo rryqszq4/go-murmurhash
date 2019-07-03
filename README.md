@@ -22,6 +22,14 @@ func MurmurHash3_x86_32(key []byte, seed uint32) (hash uint32)
 func MurmurHash3_x86_128(key []byte, seed uint32) (hash [4]uint32)
 func MurmurHash3_x64_128(key []byte, seed uint64) (hash [2]uint64)
 ```
+## Test
+```
+cd test; go test -v
+```
+
+```
+go test -bench=. -benchmem
+```
 
 ## License
 ```
