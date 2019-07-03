@@ -23,12 +23,54 @@ func MurmurHash3_x86_128(key []byte, seed uint32) (hash [4]uint32)
 func MurmurHash3_x64_128(key []byte, seed uint64) (hash [2]uint64)
 ```
 ## Test
-```
 cd test; go test -v
 ```
-
+=== RUN   TestMurmurHash1
+--- PASS: TestMurmurHash1 (0.00s)
+=== RUN   TestMurmurHash1Aligned
+--- PASS: TestMurmurHash1Aligned (0.00s)
+=== RUN   TestMurmurHash2
+--- PASS: TestMurmurHash2 (0.00s)
+=== RUN   TestMurmurHash64A
+--- PASS: TestMurmurHash64A (0.00s)
+=== RUN   TestMurmurHash64B
+--- PASS: TestMurmurHash64B (0.00s)
+=== RUN   TestMurmurHash2A
+--- PASS: TestMurmurHash2A (0.00s)
+=== RUN   TestMurmurHashNeutral2
+--- PASS: TestMurmurHashNeutral2 (0.00s)
+=== RUN   TestMurmurHashAligned2
+--- PASS: TestMurmurHashAligned2 (0.00s)
+=== RUN   TestMurmurHash3_x86_32
+--- PASS: TestMurmurHash3_x86_32 (0.00s)
+=== RUN   TestMurmurHash3_x86_128
+--- PASS: TestMurmurHash3_x86_128 (0.00s)
+=== RUN   TestMurmurHash3_x64_128
+--- PASS: TestMurmurHash3_x64_128 (0.00s)
+=== RUN   ExampleMurmurHash1
+--- PASS: ExampleMurmurHash1 (0.00s)
+=== RUN   ExampleMurmurHash1Aligned
+--- PASS: ExampleMurmurHash1Aligned (0.00s)
+PASS
 ```
+
+
 go test -bench=. -benchmem
+```
+goos: darwin
+goarch: amd64
+BenchmarkMurmurHash1-8           	300000000	         5.87 ns/op	       0 B/op	       0 allocs/op
+BenchmarkMurmurHash1Aligned-8    	200000000	         6.94 ns/op	       0 B/op	       0 allocs/op
+BenchmarkMurmurHash2-8           	300000000	         5.54 ns/op	       0 B/op	       0 allocs/op
+BenchmarkMurmurHash64A-8         	300000000	         5.85 ns/op	       0 B/op	       0 allocs/op
+BenchmarkMurmurHash64B-8         	200000000	         7.17 ns/op	       0 B/op	       0 allocs/op
+BenchmarkMurmurHash2A-8          	200000000	         6.19 ns/op	       0 B/op	       0 allocs/op
+BenchmarkMurmurHashNeutral2-8    	200000000	         6.39 ns/op	       0 B/op	       0 allocs/op
+BenchmarkMurmurHashAligned2-8    	300000000	         5.89 ns/op	       0 B/op	       0 allocs/op
+BenchmarkMurmurHash3_x86_32-8    	300000000	         5.96 ns/op	       0 B/op	       0 allocs/op
+BenchmarkMurmurHash3_x86_128-8   	300000000	         5.65 ns/op	       0 B/op	       0 allocs/op
+BenchmarkMurmurHash3_x64_128-8   	300000000	         5.64 ns/op	       0 B/op	       0 allocs/op
+PASS
 ```
 
 ## License
