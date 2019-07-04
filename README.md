@@ -6,6 +6,25 @@ go-murmurhash is Go implementation of murmurhash algorithm.
 ```sh
 go get github.com/rryqszq4/go-murmurhash
 ```
+## Usage
+```go
+package main
+
+import (
+   "fmt"
+   . "github.com/rryqszq4/go-murmurhash"
+)
+
+func main() {
+   var foo string = "foo"
+   var seed uint32 = 0x12345678
+   
+   var key = []byte(foo)
+   
+   fmt.Printf("%d\n", MurmurHash64A(key, uint64(seed)))
+}
+```
+
 ## API
 ```
 func MurmurHash1 (key []byte, seed uint32) (hash uint32)
