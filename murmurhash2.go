@@ -71,6 +71,8 @@ func MurmurHash64A (key []byte, seed uint64) (hash uint64) {
 		h *= m
 	}
 
+	data = data[l8 * 8:]
+
 	switch l & 7 {
 	case 7:
 		h ^= uint64(data[6]) << 48
