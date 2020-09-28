@@ -134,6 +134,7 @@ func MurmurHash64B(key []byte, seed uint64) (hash uint64) {
 		k1 = uint32(data[0]) + uint32(data[1]) << 8 + uint32(data[2]) << 16 + uint32(data[3]) << 24
 		k1 *= m; k1 ^= k1 >> r; k1 *= m
 		h1 *= m; h1 ^= k1
+		data = data[4:]
 		l -= 4
 	}
 

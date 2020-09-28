@@ -1,8 +1,8 @@
 package main
 
 import (
-	"testing"
 	. "../../go-murmurhash"
+	"testing"
 )
 
 func TestMurmurHash2(t *testing.T) {
@@ -53,10 +53,9 @@ func TestMurmurHash64B(t *testing.T) {
 		hash uint64
 	}{
 		{0x12345678, "foo", 7448014171559636702},
-		{0x12345678, "foofoo", 6143656703560561235},
-		{0x12345678, "foofoofoofoofoofoofoofoo", 11180785033823365454},
+		{0x12345678, "foofoo", 16456474906696517823},
+		{0x12345678, "foofoofoofoofoofoofoofoo", 11721382138582807969},
 	}
-
 	for _, test := range tests {
 		hash := MurmurHash64B([]byte(test.key), test.seed)
 		if hash != test.hash {
